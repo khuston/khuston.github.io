@@ -6,7 +6,7 @@ categories: statistics
 ---
 A Bernoulli trial has two possible outcomes: success or failure. Let's define _reliability_ as the statistical fraction of outcomes which are successful. We can then ask, what is our _confidence_ that the reliability meets or exceeds a minimum threshold.
 
-$$\begin{displaymath}r \geq m\end{displaymath}$$
+$$r \geq m$$
 
 |------------------------|
 | Variable | Description |
