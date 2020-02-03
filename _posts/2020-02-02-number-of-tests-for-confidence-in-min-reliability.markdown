@@ -15,6 +15,15 @@ $$r \geq m$$
 | $$m$$    | Min. Reliability |
 |-----------------------------|
 
+
+|------------------------|
+| Variable | Description |
+| r    | Reliability |
+| c    | Confidence  |
+| m    | Min. Reliability |
+|-----------------------------|
+
+
 If we want a certain level of confidence that some fraction of Bernoulli trials will be successful.
 We may want to achieve a certain level of confidence that our process or product is successful a minimum percentage of the time.
 
