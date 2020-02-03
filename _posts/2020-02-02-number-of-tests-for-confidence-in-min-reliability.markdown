@@ -8,6 +8,16 @@ A Bernoulli trial has two possible outcomes: success or failure. Let's define _r
 
 $$r \geq m$$
 
+| A simple | table |
+| with multiple | lines|
+
+
+| Variable | Description |
+| $$r$$ | Reliability |
+| $$c$$ | Confidence |
+| $$m$$ | Min. Reliability |
+
+
 |----------|-------------|
 | Variable | Description |
 | $$r$$    | Reliability |
