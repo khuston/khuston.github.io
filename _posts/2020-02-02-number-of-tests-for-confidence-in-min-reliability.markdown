@@ -13,7 +13,7 @@ $$r \geq m$$
 | $$r$$    | Reliability |
 | $$c$$    | Confidence  |
 | $$m$$    | Min. Reliability |
-|-----------------------------|
+|----------|------------------|
 
 
 |----------|-------------|
@@ -21,7 +21,7 @@ $$r \geq m$$
 | r    | Reliability |
 | c    | Confidence  |
 | m    | Min. Reliability |
-|-----------------------------|
+|----------|------------------|
 
 
 If we want a certain level of confidence that some fraction of Bernoulli trials will be successful.
