@@ -1,7 +1,7 @@
 ---
 layout: post
 title:  "Number of tests to achieve a desired confidence in reliability"
-date:   2020-02-02 19:15:00 -0500
+date:   2020-02-04 12:30:00 -0500
 categories: statistics
 ---
 A Bernoulli trial has two possible outcomes: success or failure. Let's define _reliability_ as the statistical fraction of outcomes which are successful. We can then ask, what is our _confidence_ that the reliability meets or exceeds a minimum threshold.
