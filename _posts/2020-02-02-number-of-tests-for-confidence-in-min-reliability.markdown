@@ -8,7 +8,7 @@ A Bernoulli trial has two possible outcomes: success or failure. Let's define _r
 
 $$r \geq m$$
 
-|------------------------|
+|----------|-------------|
 | Variable | Description |
 | $$r$$    | Reliability |
 | $$c$$    | Confidence  |
@@ -16,7 +16,7 @@ $$r \geq m$$
 |-----------------------------|
 
 
-|------------------------|
+|----------|-------------|
 | Variable | Description |
 | r    | Reliability |
 | c    | Confidence  |
