@@ -3,18 +3,19 @@ layout: post
 title:  "Number of tests to achieve a desired confidence in reliability"
 date:   2020-02-04 12:30:00 -0500
 categories: statistics
+mathjax: true
 ---
 A Bernoulli trial has two possible outcomes: success or failure. If we run $$N$$ trials, then we will observe $$s$$ successes and $$f$$ failures where $$s+f=N$$. Let's define _reliability_ $$r$$ as the expected fraction of outcomes which are successful $$\langle \frac{s}{N} \rangle = \lim_{N \to \infty} \left(\frac {s}{N} \right)$$. We can then ask, what is our _confidence_ $$C$$ that the reliability meets or exceeds a minimum threshold $$m$$. Formally,
 
 $$C = P(r \geq m)$$
 
-The minimum number of trials $N$ to achieve a confidence $C$ that reliability meets or exceeds $m$ is
+The minimum number of trials $$N$$ to achieve a confidence $$C$$ that reliability meets or exceeds $m$ is
 
 $$N = \frac{\ln \left( 1 - C \right)}{\ln m} - 1$$
 
 **Proof**
 
-If $P$ is the posterior probability informed by data from Bernoulli trials, then
+If $$P$$ is the posterior probability informed by data from Bernoulli trials, then
 
 $$C = P(r \geq m \mid s, f) = \int_{x=m}^{x=1} P(r = x \mid s, f) \: dx$$
 
