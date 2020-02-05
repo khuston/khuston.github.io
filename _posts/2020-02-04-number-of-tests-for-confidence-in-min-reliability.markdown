@@ -9,7 +9,7 @@ A Bernoulli trial has two possible outcomes: success or failure. If we run $$N$$
 
 $$C = P(r \geq m)$$
 
-The minimum number of trials $$N$$ to achieve a confidence $$C$$ that reliability meets or exceeds $m$ is
+The minimum number of trials $$N$$ to achieve a confidence $$C$$ that reliability meets or exceeds $$m$$ is
 
 $$N = \frac{\ln \left( 1 - C \right)}{\ln m} - 1$$
 
