@@ -31,6 +31,8 @@ github_username:  khuston
 theme: minima
 plugins:
   - jekyll-feed
+  
+future: false  
 
   
 defaults:
@@ -40,8 +42,7 @@ defaults:
     values:
       layout: "default"
       mathjax: false
-      plotly: false
-      future: false
+      plotly: false      
 
 # Exclude from processing.
 # The following items will not be processed, by default.
