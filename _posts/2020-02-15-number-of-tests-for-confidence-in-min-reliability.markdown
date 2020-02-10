@@ -1,7 +1,7 @@
 ---
 layout: post
 title:  "Number of tests to achieve a desired confidence in reliability"
-date:   2020-02-08 12:30:00 -0500
+date:   2020-02-15 12:30:00 -0500
 categories: statistics
 mathjax: true
 ---
