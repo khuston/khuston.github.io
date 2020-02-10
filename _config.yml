@@ -41,6 +41,7 @@ defaults:
       layout: "default"
       mathjax: false
       plotly: false
+      future: false
 
 # Exclude from processing.
 # The following items will not be processed, by default.
