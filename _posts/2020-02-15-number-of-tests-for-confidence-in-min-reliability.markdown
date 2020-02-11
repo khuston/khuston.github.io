@@ -5,7 +5,7 @@ date:   2020-02-15 12:30:00 -0500
 categories: statistics
 mathjax: true
 ---
-A Bernoulli trial has two possible outcomes: success or failure. If we run $$n$$ trials, then we will observe $$S$$ successes and $$F$$ failures where $$S+F=n$$. Let's define _reliability_ $$R \in [0, 1]$$ as the expected fraction of outcomes which are successful $$\langle \frac{S}{n} \rangle = \lim_{n \to \infty} \left(\frac {S}{n} \right)$$. We can then ask, what is our _confidence_ $$c \in [0, 1]$$ that the reliability meets or exceeds a minimum threshold $$m$$. Formally, our confidence is the probability,
+A [Bernoulli trial][Bernoulli trial] has two possible outcomes: success or failure. If we run $$n$$ trials, then we will observe $$S$$ successes and $$F$$ failures where $$S+F=n$$. Let's define _reliability_ $$R \in [0, 1]$$ as the expected fraction of outcomes which are successful $$\langle \frac{S}{n} \rangle = \lim_{n \to \infty} \left(\frac {S}{n} \right)$$. We can then ask, what is our _confidence_ $$c \in [0, 1]$$ that the reliability meets or exceeds a minimum threshold $$m$$. Formally, our confidence is the probability,
 
 $$c = P(R \geq m)$$
 
@@ -45,6 +45,4 @@ $$P(r = x) \sim \text{Beta}(\alpha, \beta)$$
 If we want a certain level of confidence that some fraction of Bernoulli trials will be successful.
 We may want to achieve a certain level of confidence that our process or product is successful a minimum percentage of the time.
 
-[jekyll-docs]: https://jekyllrb.com/docs/home
-[jekyll-gh]:   https://github.com/jekyll/jekyll
-[jekyll-talk]: https://talk.jekyllrb.com/
+[Bernoulli trial]: https://en.wikipedia.org/wiki/Bernoulli_trial
