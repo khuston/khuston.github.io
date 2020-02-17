@@ -1,7 +1,7 @@
 ---
 layout: post
 title:  "What is React? An introduction for web development newbies"
-date:   2020-02-15 12:30:00 -0500
+date:   2020-02-20 12:30:00 -0500
 categories: [web, programming]
 ---
 # Contents
@@ -31,7 +31,7 @@ For a web page to be more interactive and dynamic than plain HTML and CSS allow,
 |:-----------------------:|
 | *Figure 1. A class diagram. Arrows point from an extended interface to the base interface it extends.* |
 
-The above inheritance diagram shows that `Node` inherits from `EventTarget`, which we will discuss later. It also shows that `Document` and `Element` inherit from `Node`. We will focus on the `Element` type, and we'll refer to them as DOM elements going forward.
+The above inheritance diagram shows that `Node` inherits from `EventTarget`. The `EventTarget` admits listeners which handle events on the `EventTarget` such as `onClick`, `onMouseOver`, `onChange`, etc. It also shows that `Document` and `Element` inherit from `Node`. We will focus on the `Element` type, and we'll refer to them as DOM elements going forward. **EventTarget plays the role of sender in the parlance of .NET and Object Pascal** 
 
 Among the children of our root node (`document.childList`) there can only be one element, namely `<html>`. The tree structure starting at `<html>` is predictable if you are familiar with HTML.
 
@@ -44,7 +44,7 @@ Among the children of our root node (`document.childList`) there can only be one
 
 Familiar landmarks pop out in the figure above: `<html>`, `<head>`, `<body>`, `<p>`, and `<script>`. In a static web page, these elements do not change once they are loaded. In more dynamic web pages, Javascript modifies the DOM by adding elements, deleting elements, and modifying the attributes of such elements.
 
-A problem **need citation!!** is that modification of the DOM is slow. With each incremental change to the DOM, the web browser recreates the view **need citation!!**. **What are other advantages of React?**
+React handles the DOM API calls needed to update the web page in a well-defined and efficient manner.
 
 # 3. What React does with the DOM
 {: #Section3}
