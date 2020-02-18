@@ -1,0 +1,1 @@
+Run the command `npx babel src --out-dir . --presets react-app/prod` in this directory. The JSX in the folder `src` will be preprocessed into JS files with the same names.
