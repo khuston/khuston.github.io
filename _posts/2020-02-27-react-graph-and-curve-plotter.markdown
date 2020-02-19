@@ -15,6 +15,6 @@ I often make simple plots with [FooPlot](fooplot) because it is quick and easy t
 The function definitions may include many standard mathematical functions, but sometimes a function is missing.
 
 {% include loadreact.html %}
-{% include test-app.html %}
+{% include plotter-react-app.html %}
 
 [fooplot]: http://fooplot.com
