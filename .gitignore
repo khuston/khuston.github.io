@@ -6,3 +6,5 @@ vendor
 *.code-workspace
 .vscode
 *node_modules*
+assets/js/package.json
+assets/js/package-lock.json
