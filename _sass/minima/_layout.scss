@@ -253,3 +253,10 @@
     }
   }
 }
+
+.plot-app {
+  display: flex;
+  flex-direction: row;
+  border-style: solid;
+  border-width: 1px;
+}

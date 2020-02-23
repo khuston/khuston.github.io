@@ -3,10 +3,10 @@ function PlotApp(props)
     var image1 = {
         type: "data2D",
         data: [
-            [10, -40],
-            [20, -30],
-            [30, -20],
-            [40, -10]
+            [10, 40],
+            [20, 30],
+            [30, 20],
+            [40, 10]
         ]
     }
 
@@ -25,20 +25,75 @@ function PlotApp(props)
         image2
     ]
 
+    const [alpha, setAlpha] = React.useState(0);
+
+    const [beta, setBeta] = React.useState(0);
+
+    function onAlphaChange(newAlpha) {
+        setAlpha(newAlpha);
+    }
+
+    function onBetaChange(newBeta) {
+        setBeta(newBeta);
+    }    
+
     return (
-        <div>
-            <Plot images={imagesToPlot} width={250} height={250} />
-            <ImageConfiguration />
-            <h1>Hello World!</h1>
+        <div className="plot-app">
+            <Plot images={imagesToPlot} width={width} height={height} />
+            <ImageConfiguration alpha={alpha} beta={beta} onAlphaChange={onAlphaChange} onBetaChange={onBetaChange}/>
         </div>
     )
 }
 
-function Plot(props)
+class Plot extends React.Component
 {
-    return (
-        <SVGDataListFactory width={props.width} height={props.height} minX={0} maxX={50} minY={-50} maxY={0} imageData={props.images} />
-    )
+    constructor(props) {
+        super(props);
+
+        this.isMouseDown = false;
+
+        this.state = {
+            minX: 0,
+            minY: 0,
+            maxX: 50,
+            maxY: 50
+        };
+      }
+
+    handleMouseDown() {
+        this.isMouseDown = true;
+    }
+
+    handleMouseUp() {
+        this.isMouseDown = false;
+    }
+
+    handleMouseMove(e) {
+        if (this.isMouseDown) {
+            var mouseCoordRatio = (this.state.maxY - this.state.minY)/this.props.height
+
+            var dx = -e.movementX*mouseCoordRatio
+            var dy = e.movementY*mouseCoordRatio
+
+            this.setState({
+                minX: this.state.minX + dx,
+                minY: this.state.minY + dy,
+                maxX: this.state.maxX + dx,
+                maxY: this.state.maxY + dy
+            })
+        }
+    }
+
+    render() {
+        return (
+            <div onMouseDown={this.handleMouseDown.bind(this)} onMouseUp={this.handleMouseUp.bind(this)}
+            onMouseLeave={this.handleMouseUp.bind(this)} 
+            onMouseMove={this.handleMouseMove.bind(this)}>
+            <SVGDataListFactory width={this.props.width} height={this.props.height}
+            minX={this.state.minX} minY={this.state.minY} maxX={this.state.maxX} maxY={this.state.maxY} imageData={this.props.images} />
+            </div>
+        )
+    }
 }
 
 function SVGDataListFactory(props)
@@ -57,8 +112,6 @@ function SVGDataListFactory(props)
     }
 
     const svgChildren = props.imageData.map((imageData) => SVGDataFactory(imageData, entityStyleSpec, viewTrans)).flat();
-
-    console.log(svgChildren);
 
     var svgProps = {
         width: props.width,
@@ -116,12 +169,25 @@ function SVGElementFactory(entitySpec)
 
 function ImageConfiguration(props)
 {
+    function onAlphaChange(e) {
+        return props.onAlphaChange(e.target.value)
+    }
+
+    function onBetaChange(e) {
+        return props.onBetaChange(e.target.value)
+    }    
+
     return (
-        <ul>
-            <li>1</li>
-            <li>2</li>
-            <li>3</li>
-        </ul>
+        <form>
+            <label>
+                Alpha:
+                <input type="text" name="alpha" onChange={onAlphaChange}></input>
+            </label>
+            <label>
+                Beta:
+                <input type="text" name="beta" onChange={onBetaChange}></input>
+            </label>            
+        </form>
     )
 }
   

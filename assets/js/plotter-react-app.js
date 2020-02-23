@@ -1,7 +1,17 @@
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+var _slicedToArray = function () { function sliceIterator(arr, i) { var _arr = []; var _n = true; var _d = false; var _e = undefined; try { for (var _i = arr[Symbol.iterator](), _s; !(_n = (_s = _i.next()).done); _n = true) { _arr.push(_s.value); if (i && _arr.length === i) break; } } catch (err) { _d = true; _e = err; } finally { try { if (!_n && _i["return"]) _i["return"](); } finally { if (_d) throw _e; } } return _arr; } return function (arr, i) { if (Array.isArray(arr)) { return arr; } else if (Symbol.iterator in Object(arr)) { return sliceIterator(arr, i); } else { throw new TypeError("Invalid attempt to destructure non-iterable instance"); } }; }();
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
 function PlotApp(props) {
     var image1 = {
         type: "data2D",
-        data: [[10, -40], [20, -30], [30, -20], [40, -10]]
+        data: [[10, 40], [20, 30], [30, 20], [40, 10]]
     };
 
     var image2 = {
@@ -11,22 +21,94 @@ function PlotApp(props) {
 
     var imagesToPlot = [image1, image2];
 
+    var _React$useState = React.useState(0),
+        _React$useState2 = _slicedToArray(_React$useState, 2),
+        alpha = _React$useState2[0],
+        setAlpha = _React$useState2[1];
+
+    var _React$useState3 = React.useState(0),
+        _React$useState4 = _slicedToArray(_React$useState3, 2),
+        beta = _React$useState4[0],
+        setBeta = _React$useState4[1];
+
+    function onAlphaChange(newAlpha) {
+        setAlpha(newAlpha);
+    }
+
+    function onBetaChange(newBeta) {
+        setBeta(newBeta);
+    }
+
     return React.createElement(
         "div",
-        null,
-        React.createElement(Plot, { images: imagesToPlot, width: 250, height: 250 }),
-        React.createElement(ImageConfiguration, null),
-        React.createElement(
-            "h1",
-            null,
-            "Hello World!"
-        )
+        { className: "plot-app" },
+        React.createElement(Plot, { images: imagesToPlot, width: width, height: height }),
+        React.createElement(ImageConfiguration, { alpha: alpha, beta: beta, onAlphaChange: onAlphaChange, onBetaChange: onBetaChange })
     );
 }
 
-function Plot(props) {
-    return React.createElement(SVGDataListFactory, { width: props.width, height: props.height, minX: 0, maxX: 50, minY: -50, maxY: 0, imageData: props.images });
-}
+var Plot = function (_React$Component) {
+    _inherits(Plot, _React$Component);
+
+    function Plot(props) {
+        _classCallCheck(this, Plot);
+
+        var _this = _possibleConstructorReturn(this, (Plot.__proto__ || Object.getPrototypeOf(Plot)).call(this, props));
+
+        _this.isMouseDown = false;
+
+        _this.state = {
+            minX: 0,
+            minY: 0,
+            maxX: 50,
+            maxY: 50
+        };
+        return _this;
+    }
+
+    _createClass(Plot, [{
+        key: "handleMouseDown",
+        value: function handleMouseDown() {
+            this.isMouseDown = true;
+        }
+    }, {
+        key: "handleMouseUp",
+        value: function handleMouseUp() {
+            this.isMouseDown = false;
+        }
+    }, {
+        key: "handleMouseMove",
+        value: function handleMouseMove(e) {
+            if (this.isMouseDown) {
+                var mouseCoordRatio = (this.state.maxY - this.state.minY) / this.props.height;
+
+                var dx = -e.movementX * mouseCoordRatio;
+                var dy = e.movementY * mouseCoordRatio;
+
+                this.setState({
+                    minX: this.state.minX + dx,
+                    minY: this.state.minY + dy,
+                    maxX: this.state.maxX + dx,
+                    maxY: this.state.maxY + dy
+                });
+            }
+        }
+    }, {
+        key: "render",
+        value: function render() {
+            return React.createElement(
+                "div",
+                { onMouseDown: this.handleMouseDown.bind(this), onMouseUp: this.handleMouseUp.bind(this),
+                    onMouseLeave: this.handleMouseUp.bind(this),
+                    onMouseMove: this.handleMouseMove.bind(this) },
+                React.createElement(SVGDataListFactory, { width: this.props.width, height: this.props.height,
+                    minX: this.state.minX, minY: this.state.minY, maxX: this.state.maxX, maxY: this.state.maxY, imageData: this.props.images })
+            );
+        }
+    }]);
+
+    return Plot;
+}(React.Component);
 
 function SVGDataListFactory(props) {
     var entityStyleSpec = {
@@ -45,8 +127,6 @@ function SVGDataListFactory(props) {
     var svgChildren = props.imageData.map(function (imageData) {
         return SVGDataFactory(imageData, entityStyleSpec, viewTrans);
     }).flat();
-
-    console.log(svgChildren);
 
     var svgProps = {
         width: props.width,
@@ -102,23 +182,28 @@ function SVGElementFactory(entitySpec) {
 }
 
 function ImageConfiguration(props) {
+    function onAlphaChange(e) {
+        return props.onAlphaChange(e.target.value);
+    }
+
+    function onBetaChange(e) {
+        return props.onBetaChange(e.target.value);
+    }
+
     return React.createElement(
-        "ul",
+        "form",
         null,
         React.createElement(
-            "li",
+            "label",
             null,
-            "1"
+            "Alpha:",
+            React.createElement("input", { type: "text", name: "alpha", onChange: onAlphaChange })
         ),
         React.createElement(
-            "li",
+            "label",
             null,
-            "2"
-        ),
-        React.createElement(
-            "li",
-            null,
-            "3"
+            "Beta:",
+            React.createElement("input", { type: "text", name: "beta", onChange: onBetaChange })
         )
     );
 }
