@@ -1,7 +1,7 @@
 ---
 layout: post
 title:  "React app for plotting graphs and curves" 
-date:   2020-02-27 12:30:00 -0500
+date:   2020-02-30 12:30:00 -0500
 categories: [web, programming]
 mathjax: true
 ---

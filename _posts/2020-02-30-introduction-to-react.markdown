@@ -1,7 +1,7 @@
 ---
 layout: post
 title:  "What is React? An introduction for web development newbies"
-date:   2020-02-20 12:30:00 -0500
+date:   2020-02-30 12:30:00 -0500
 categories: [web, programming]
 ---
 # Contents
