@@ -19,14 +19,12 @@ function PlotApp(props) {
         data: [[100, 0], [110, 10], [120, 20], [130, 30]]
     };
 
-    var imagesToPlot = [image1, image2];
-
-    var _React$useState = React.useState(0),
+    var _React$useState = React.useState(1),
         _React$useState2 = _slicedToArray(_React$useState, 2),
         alpha = _React$useState2[0],
         setAlpha = _React$useState2[1];
 
-    var _React$useState3 = React.useState(0),
+    var _React$useState3 = React.useState(1),
         _React$useState4 = _slicedToArray(_React$useState3, 2),
         beta = _React$useState4[0],
         setBeta = _React$useState4[1];
@@ -39,10 +37,24 @@ function PlotApp(props) {
         setBeta(newBeta);
     }
 
+    var i;
+    var data = [];
+    for (i = 0; i <= 100; i++) {
+        x = 0.01 * i;
+        data.push([x, BlogMath.BetaPDF(x, alpha, beta)]);
+    }
+
+    var image3 = {
+        type: 'data2D',
+        data: data
+    };
+
+    var imagesToPlot = [image3];
+
     return React.createElement(
         "div",
         { className: "plot-app" },
-        React.createElement(Plot, { images: imagesToPlot, width: width, height: height }),
+        React.createElement(Plot, { images: imagesToPlot, width: 500, height: 500 }),
         React.createElement(ImageConfiguration, { alpha: alpha, beta: beta, onAlphaChange: onAlphaChange, onBetaChange: onBetaChange })
     );
 }
@@ -60,8 +72,8 @@ var Plot = function (_React$Component) {
         _this.state = {
             minX: 0,
             minY: 0,
-            maxX: 50,
-            maxY: 50
+            maxX: 1,
+            maxY: 5
         };
         return _this;
     }
@@ -192,7 +204,7 @@ function ImageConfiguration(props) {
 
     return React.createElement(
         "form",
-        null,
+        { className: "parameter-spec" },
         React.createElement(
             "label",
             null,

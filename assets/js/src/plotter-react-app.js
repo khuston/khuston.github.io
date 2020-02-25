@@ -20,14 +20,9 @@ function PlotApp(props)
         ]
     }
 
-    var imagesToPlot = [
-        image1,
-        image2
-    ]
+    const [alpha, setAlpha] = React.useState(1);
 
-    const [alpha, setAlpha] = React.useState(0);
-
-    const [beta, setBeta] = React.useState(0);
+    const [beta, setBeta] = React.useState(1);
 
     function onAlphaChange(newAlpha) {
         setAlpha(newAlpha);
@@ -37,9 +32,25 @@ function PlotApp(props)
         setBeta(newBeta);
     }    
 
+    var i;
+    var data = [];
+    for (i = 0; i <= 100; i++) {
+        x = 0.01*i
+        data.push([x, BlogMath.BetaPDF(x, alpha, beta)])
+    }
+
+    var image3 = {
+        type: 'data2D',
+        data: data
+    }
+
+    var imagesToPlot = [
+        image3
+    ]
+
     return (
         <div className="plot-app">
-            <Plot images={imagesToPlot} width={width} height={height} />
+            <Plot images={imagesToPlot} width={500} height={500} />
             <ImageConfiguration alpha={alpha} beta={beta} onAlphaChange={onAlphaChange} onBetaChange={onBetaChange}/>
         </div>
     )
@@ -55,8 +66,8 @@ class Plot extends React.Component
         this.state = {
             minX: 0,
             minY: 0,
-            maxX: 50,
-            maxY: 50
+            maxX: 1,
+            maxY: 5
         };
       }
 
@@ -178,7 +189,7 @@ function ImageConfiguration(props)
     }    
 
     return (
-        <form>
+        <form className="parameter-spec">
             <label>
                 Alpha:
                 <input type="text" name="alpha" onChange={onAlphaChange}></input>
