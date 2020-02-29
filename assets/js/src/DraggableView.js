@@ -1,5 +1,4 @@
-
-export function draggable_rect_view(RectViewComponent, initialBoundingRect=defaultBoundingRect) {
+export function add_draggable_view_state(RectViewComponent, initialBoundingRect=defaultBoundingRect) {
     
     // This function must be called in the component that shares state with the draggable view.
     const [boundingRect, setBoundingRect] = React.useState(initialBoundingRect);

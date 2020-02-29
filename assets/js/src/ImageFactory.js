@@ -1,11 +1,24 @@
+import {BlogMath} from "./BlogMath.js"
+
+export function FunctionImageFactory(funcToPlot, xInterval, numSegments) {
+    let xArray = CreateRangeArray(xInterval, numSegments);
+
+    let fullXYArray = xArray.map((x, i) => [x, funcToPlot(x)]);
+
+    return ({
+        type: 'evaluatedFunc2D',
+        data: fullXYArray
+    })
+}
+
+
 /*
     A more robust approach would be a CurveImageFactory that produces smooth points to plot
     a plane curve. Functions would be covered by the case where the plane curve is (x, f(x)).
 */
-function FunctionImageFactory(funcToPlot, xInterval, minNumSegments, aspectRatio=10) {
+export function FunctionImageFactory_Adaptive(funcToPlot, xInterval, minNumSegments, aspectRatio=10) {
     var i;
 
-    var xArray = [];
     var yArray = [];
     var dydxArray = [];
 
@@ -16,11 +29,7 @@ function FunctionImageFactory(funcToPlot, xInterval, minNumSegments, aspectRatio
 
     let maxDx = (end - start)/minNumSegments;
 
-    for (i = 0; i <= minNumSegments; i++) {
-
-        x = start + i*maxDx;
-        xArray.push(x);
-    }
+    var xArray = CreateRangeArray(xInterval, minNumSegments)
 
     yArray = xArray.map(x => funcToPlot(x));
     dydxArray = xArray.map(x => BlogMath.Derivatives.Second_CenteredFiniteDifference_Simple(funcToPlot, x));
@@ -29,28 +38,28 @@ function FunctionImageFactory(funcToPlot, xInterval, minNumSegments, aspectRatio
     var prevDydx = [];
     var nextDydx = [];
 
-    prevNumber = 0;
+    let prevNumber = 0;
     for (i = 0; i < dydxArray.length; i++) {
-        dydx = dydxArray[i];
+        let dydx = dydxArray[i];
         if (Number.isFinite(dydx)) {
             prevNumber = dydx;
         }
         prevDydx[i] = prevNumber;
     }
 
-    nextNumber = 0;
+    let nextNumber = 0;
     for (i = dydxArray.length - 1; i >= 0; i--) {
-        dydx = dydxArray[i];
+        let dydx = dydxArray[i];
         if ( Number.isFinite(dydx)) {
             nextNumber = dydx;
         }
         nextDydx[i] = nextNumber;
     }
 
-    regularizedDydx = dydxArray.map((dydx, i) => (Number.isFinite(dydx) ? Math.abs(dydx) : Math.max(Math.abs(prevDydx[i]), Math.abs(nextDydx[i]))));
+    let regularizedDydx = dydxArray.map((dydx, i) => (Number.isFinite(dydx) ? Math.abs(dydx) : Math.max(Math.abs(prevDydx[i]), Math.abs(nextDydx[i]))));
 
     // todo: verify the proper scaling for numExtraPoints
-    numExtraPointsArray = regularizedDydx.map(dydx => 2*Math.trunc((4.0*dydx/aspectRatio*maxDx + 1.0)/2.0));
+    let numExtraPointsArray = regularizedDydx.map(dydx => 2*Math.trunc((4.0*dydx/aspectRatio*maxDx + 1.0)/2.0));
 
     var j;
     var extraX;
@@ -59,8 +68,8 @@ function FunctionImageFactory(funcToPlot, xInterval, minNumSegments, aspectRatio
 
     for (i = 0; i < xArray.length; i++) {
         x = xArray[i];
-        numExtraPoints = numExtraPointsArray[i];
-        dx = maxDx/numExtraPoints;
+        let numExtraPoints = numExtraPointsArray[i];
+        let dx = maxDx/numExtraPoints;
 
         for (j = 1; j <= numExtraPoints; j++) {
             extraX = (x - (maxDx + dx)/2.0 + j * dx);
@@ -78,13 +87,13 @@ function FunctionImageFactory(funcToPlot, xInterval, minNumSegments, aspectRatio
         extraYArray.push(y);
     }
 
-    fullXArray = xArray.concat(extraXArray);
-    fullYArray = yArray.concat(extraYArray);
+    let fullXArray = xArray.concat(extraXArray);
+    let fullYArray = yArray.concat(extraYArray);
 
-    fullXYArray = fullXArray.map((x, i) => [x, fullYArray[i]]);
+    let fullXYArray = fullXArray.map((x, i) => [x, fullYArray[i]]);
 
     fullXYArray.sort(function (xy1, xy2) {
-        dx = xy2[0] - xy1[0];
+        let dx = xy2[0] - xy1[0];
         if (dx > 0) {
             return -1;
         }
@@ -100,4 +109,19 @@ function FunctionImageFactory(funcToPlot, xInterval, minNumSegments, aspectRatio
         type: 'evaluatedFunc2D',
         data: fullXYArray
     })
+}
+
+function CreateRangeArray(xInterval, numSegments) {
+    let start = xInterval[0];
+    let end = xInterval[1];
+    let dx = (end - start)/numSegments;
+
+    var xArray = [];
+
+    for (var i = 0; i <= numSegments; i++) {
+        var x = start + i*dx;
+        xArray.push(x);
+    };
+
+    return xArray;
 }

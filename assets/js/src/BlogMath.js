@@ -1,4 +1,4 @@
-var BlogMath = {
+export var BlogMath = {
 
     EPSILON: 1e-07,
 

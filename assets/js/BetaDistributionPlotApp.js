@@ -1,13 +1,10 @@
-import { add_draggable_view_state } from "./DraggableView.js";
 import { Plot } from "./Plot.js";
 import { add_parameter_state } from "./ParameterViewModel.js";
 import { ParameterSpecifier, TextAndSliderParameter } from "./ParameterView.js";
-import { FunctionImageFactory_Adaptive } from "./ImageFactory.js";
+import { FunctionImageFactory } from "./ImageFactory.js";
 import { BlogMath } from "./BlogMath.js";
 
-function PlotApp(props) {
-    var DraggablePlot = add_draggable_view_state(Plot);
-
+function BetaDistributionPlotApp(props) {
     var alphaParamViewModel = add_parameter_state('Alpha', 1);
     var betaParamViewModel = add_parameter_state('Beta', 1);
 
@@ -20,16 +17,23 @@ function PlotApp(props) {
         return BlogMath.BetaPDF(x, alpha, beta);
     };
 
-    var imagesToPlot = [FunctionImageFactory_Adaptive(funcToPlot, [0, 1], 40)];
+    var funcImage = FunctionImageFactory(funcToPlot, [0, 1], 300);
+
+    var boundingRect = {
+        minX: 0,
+        minY: 0,
+        maxX: 1,
+        maxY: 20
+    };
 
     return React.createElement(
         "div",
         { className: "plot-app" },
-        React.createElement(DraggablePlot, { images: imagesToPlot, width: 500, height: 500 }),
+        React.createElement(Plot, { images: [funcImage], width: 500, height: 500, boundingRect: boundingRect }),
         React.createElement(ParameterSpecifier, { parameterViewComponent: TextAndSliderParameter, parameterViewModels: parameterViewModels })
     );
 }
 
 // ========================================
 
-ReactDOM.render(React.createElement(PlotApp, null), document.getElementById('root'));
+ReactDOM.render(React.createElement(BetaDistributionPlotApp, null), document.getElementById('root'));

@@ -1,14 +1,11 @@
-import {add_draggable_view_state} from "./DraggableView.js"
 import {Plot} from "./Plot.js"
 import {add_parameter_state} from "./ParameterViewModel.js"
 import {ParameterSpecifier, TextAndSliderParameter} from "./ParameterView.js"
-import {FunctionImageFactory_Adaptive} from "./ImageFactory.js"
+import {FunctionImageFactory} from "./ImageFactory.js"
 import {BlogMath} from "./BlogMath.js"
 
-function PlotApp(props)
+function BetaDistributionPlotApp(props)
 {
-    let DraggablePlot = add_draggable_view_state(Plot);
-
     let alphaParamViewModel = add_parameter_state('Alpha', 1);
     let betaParamViewModel = add_parameter_state('Beta', 1);
 
@@ -19,13 +16,18 @@ function PlotApp(props)
 
     let funcToPlot = (x) => BlogMath.BetaPDF(x, alpha, beta);
 
-    var imagesToPlot = [
-        FunctionImageFactory_Adaptive(funcToPlot, [0, 1], 40)
-    ]
+    let funcImage = FunctionImageFactory(funcToPlot, [0, 1], 300);
+
+    const boundingRect = {
+        minX: 0,
+        minY: 0,
+        maxX: 1,
+        maxY: 20
+    }
 
     return (
         <div className="plot-app">
-            <DraggablePlot images={imagesToPlot} width={500} height={500} />
+            <Plot images={[funcImage]} width={500} height={500} boundingRect={boundingRect} />
             <ParameterSpecifier parameterViewComponent={TextAndSliderParameter} parameterViewModels={parameterViewModels}/>
         </div>
     )
@@ -34,7 +36,7 @@ function PlotApp(props)
   // ========================================
   
   ReactDOM.render(
-    <PlotApp />,
+    <BetaDistributionPlotApp />,
     document.getElementById('root')
   );
   
