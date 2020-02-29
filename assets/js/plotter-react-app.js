@@ -1,24 +1,8 @@
-var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
 var _slicedToArray = function () { function sliceIterator(arr, i) { var _arr = []; var _n = true; var _d = false; var _e = undefined; try { for (var _i = arr[Symbol.iterator](), _s; !(_n = (_s = _i.next()).done); _n = true) { _arr.push(_s.value); if (i && _arr.length === i) break; } } catch (err) { _d = true; _e = err; } finally { try { if (!_n && _i["return"]) _i["return"](); } finally { if (_d) throw _e; } } return _arr; } return function (arr, i) { if (Array.isArray(arr)) { return arr; } else if (Symbol.iterator in Object(arr)) { return sliceIterator(arr, i); } else { throw new TypeError("Invalid attempt to destructure non-iterable instance"); } }; }();
 
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
-
-function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+import { draggable_rect_view } from "./DraggableView.js";
 
 function PlotApp(props) {
-    var image1 = {
-        type: "data2D",
-        data: [[10, 40], [20, 30], [30, 20], [40, 10]]
-    };
-
-    var image2 = {
-        type: "data2D",
-        data: [[100, 0], [110, 10], [120, 20], [130, 30]]
-    };
-
     var _React$useState = React.useState(1),
         _React$useState2 = _slicedToArray(_React$useState, 2),
         alpha = _React$useState2[0],
@@ -71,108 +55,51 @@ function PlotApp(props) {
         tryParseNumber(setBeta, newBeta, setBetaError);
     }
 
-    var data = [];
-    if (!alphaError && !betaError) {
-        var i;
-        for (i = 0; i <= 100; i++) {
-            x = 0.01 * i;
-            data.push([x, BlogMath.BetaPDF(x, alpha, beta)]);
-        }
-    }
-
-    var image3 = {
-        type: 'data2D',
-        data: data
+    var funcToPlot = function funcToPlot(x) {
+        return BlogMath.BetaPDF(x, alpha, beta);
     };
 
-    var width = 500;
-    var height = 500;
-    var minX = 0;
-    var minY = 0;
-    var maxX = 1;
-    var maxY = 20;
+    var imagesToPlot = [FunctionImageFactory(funcToPlot, [0, 1], 40)];
 
-    aspectRatio = (maxY - minY) / (maxX - minX) * width / height;
-
-    var imagesToPlot = [
-    //image3
-    FunctionImageFactory(function (x) {
-        return BlogMath.BetaPDF(x, alpha, beta);
-    }, 0, 1, 40, aspectRatio)];
+    var DraggablePlot = draggable_rect_view(Plot);
 
     return React.createElement(
-        "div",
-        { className: "plot-app" },
-        React.createElement(Plot, { images: imagesToPlot, width: width, height: height, minX: minX, minY: minY, maxX: maxX, maxY: maxY }),
+        'div',
+        { className: 'plot-app' },
+        React.createElement(DraggablePlot, { images: imagesToPlot, width: 500, height: 500 }),
         React.createElement(ImageConfiguration, { alpha: alpha, beta: beta, alphaText: alphaText, betaText: betaText,
             alphaError: alphaError, betaError: betaError,
             onAlphaChange: onAlphaChange, onBetaChange: onBetaChange })
     );
 }
 
-var Plot = function (_React$Component) {
-    _inherits(Plot, _React$Component);
+var ViewControlType = {
+    Undefined: 0,
+    Static: 1,
+    Draggable: 2
+};
 
-    function Plot(props) {
-        _classCallCheck(this, Plot);
+function DraggablePlot2(props) {
+    viewControl = ViewControlFactory(ViewControlType.Draggable, [boundingRect, setBoundingRect], props.width, props.height);
 
-        var _this = _possibleConstructorReturn(this, (Plot.__proto__ || Object.getPrototypeOf(Plot)).call(this, props));
+    return React.createElement(
+        'div',
+        { onMouseDown: viewControl.mouseDown, onMouseUp: viewControl.mouseUp,
+            onMouseLeave: viewControl.mouseLeave, onMouseMove: viewControl.mouseMove },
+        React.createElement(SVGDataListFactory, { width: props.width, height: props.height, boundingRect: viewControl.boundingRect,
+            imageData: props.images })
+    );
+}
 
-        _this.isMouseDown = false;
-
-        _this.state = {
-            minX: props.minX,
-            minY: props.minY,
-            maxX: props.maxX,
-            maxY: props.maxY
-        };
-        return _this;
-    }
-
-    _createClass(Plot, [{
-        key: "handleMouseDown",
-        value: function handleMouseDown() {
-            this.isMouseDown = true;
-        }
-    }, {
-        key: "handleMouseUp",
-        value: function handleMouseUp() {
-            this.isMouseDown = false;
-        }
-    }, {
-        key: "handleMouseMove",
-        value: function handleMouseMove(e) {
-            if (this.isMouseDown) {
-                var mouseCoordRatioX = (this.state.maxX - this.state.minX) / this.props.width;
-                var mouseCoordRatioY = (this.state.maxY - this.state.minY) / this.props.height;
-
-                var dx = -e.movementX * mouseCoordRatioX;
-                var dy = e.movementY * mouseCoordRatioY;
-
-                this.setState({
-                    minX: this.state.minX + dx,
-                    minY: this.state.minY + dy,
-                    maxX: this.state.maxX + dx,
-                    maxY: this.state.maxY + dy
-                });
-            }
-        }
-    }, {
-        key: "render",
-        value: function render() {
-            return React.createElement(
-                "div",
-                { onMouseDown: this.handleMouseDown.bind(this), onMouseUp: this.handleMouseUp.bind(this),
-                    onMouseLeave: this.handleMouseUp.bind(this),
-                    onMouseMove: this.handleMouseMove.bind(this) },
-                React.createElement(SVGDataListFactory, { width: this.props.width, height: this.props.height,
-                    minX: this.state.minX, minY: this.state.minY, maxX: this.state.maxX, maxY: this.state.maxY, imageData: this.props.images })
-            );
-        }
-    }]);
-
-    return Plot;
-}(React.Component);
+function Plot(props) {
+    return React.createElement(
+        'div',
+        { onMouseDown: props.handleMouseDown, onMouseUp: props.handleMouseUp,
+            onMouseLeave: props.handleMouseLeave, onMouseMove: props.handleMouseMove },
+        React.createElement(SVGDataListFactory, { width: props.width, height: props.height,
+            boundingRect: props.boundingRect, imageData: props.images })
+    );
+}
 
 function SVGDataListFactory(props) {
     var viewTrans = function viewTrans(xyPos) {
@@ -182,23 +109,32 @@ function SVGDataListFactory(props) {
         var xTrans;
         var yTrans;
 
+        var minX = props.boundingRect.minX;
+        var minY = props.boundingRect.minY;
+        var maxX = props.boundingRect.maxX;
+        var maxY = props.boundingRect.maxY;
+
         if (Number.isFinite(x)) {
-            xTrans = (x - props.minX) / (props.maxX - props.minX) * props.width;
+            xTrans = (x - minX) / (maxX - minX) * props.width;
         } else {
             if (x == Infinity) {
                 xTrans = props.width;
             } else if (x == -Infinity) {
                 xTrans = 0;
+            } else {
+                throw "Unhandled non-finite value " + x.toString();
             }
         }
 
         if (Number.isFinite(y)) {
-            yTrans = (props.maxY - y) / (props.maxY - props.minY) * props.height;
+            yTrans = (maxY - y) / (maxY - minY) * props.height;
         } else {
             if (y == Infinity) {
                 yTrans = 0;
             } else if (y == -Infinity) {
                 yTrans = props.height;
+            } else {
+                throw "Unhandled non-finite value " + x.toString();
             }
         }
 
@@ -319,32 +255,32 @@ function ImageConfiguration(props) {
         return props.onBetaChange(e.target.value);
     }
 
-    alphaTextClassName = "parameter-input";
+    var alphaTextClassName = "parameter-input";
     if (props.alphaError) {
         alphaTextClassName += " parameter-input-error";
     }
 
-    betaTextClassName = "parameter-input";
+    var betaTextClassName = "parameter-input";
     if (props.betaError) {
         betaTextClassName += " parameter-input-error";
     }
 
     return React.createElement(
-        "form",
-        { className: "parameter-spec" },
+        'form',
+        { className: 'parameter-spec' },
         React.createElement(
-            "label",
+            'label',
             null,
-            "Alpha:",
-            React.createElement("input", { type: "text", className: alphaTextClassName, name: "alpha", value: props.alphaText, onChange: onAlphaChange }),
-            React.createElement("input", { type: "range", min: "1", max: "100", value: props.alpha, onChange: onAlphaChange })
+            'Alpha:',
+            React.createElement('input', { type: 'text', className: alphaTextClassName, name: 'alpha', value: props.alphaText, onChange: onAlphaChange }),
+            React.createElement('input', { type: 'range', min: '1', max: '100', value: props.alpha, onChange: onAlphaChange })
         ),
         React.createElement(
-            "label",
+            'label',
             null,
-            "Beta:",
-            React.createElement("input", { type: "text", className: betaTextClassName, name: "beta", value: props.betaText, onChange: onBetaChange }),
-            React.createElement("input", { type: "range", min: "1", max: "100", value: props.beta, onChange: onBetaChange })
+            'Beta:',
+            React.createElement('input', { type: 'text', className: betaTextClassName, name: 'beta', value: props.betaText, onChange: onBetaChange }),
+            React.createElement('input', { type: 'range', min: '1', max: '100', value: props.beta, onChange: onBetaChange })
         )
     );
 }

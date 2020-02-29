@@ -1,32 +1,14 @@
+import {draggable_rect_view} from "./DraggableView.js"
+
 function PlotApp(props)
 {
-    var image1 = {
-        type: "data2D",
-        data: [
-            [10, 40],
-            [20, 30],
-            [30, 20],
-            [40, 10]
-        ]
-    }
-
-    var image2 = {
-        type: "data2D",
-        data: [
-            [100, 0],
-            [110, 10],
-            [120, 20],
-            [130, 30]
-        ]
-    }
-
     const [alpha, setAlpha] = React.useState(1);
     const [alphaText, setAlphaText] = React.useState('1');
     const [alphaError, setAlphaError] = React.useState(false);
 
     const [beta, setBeta] = React.useState(1);
     const [betaText, setBetaText] = React.useState('1');    
-    const [betaError, setBetaError] = React.useState(false);    
+    const [betaError, setBetaError] = React.useState(false);
 
     function tryParseNumber(stateVarSetter, numberString, stateErrorSetter) {        
         var parsedNumber = Number(numberString);
@@ -50,37 +32,17 @@ function PlotApp(props)
         tryParseNumber(setBeta, newBeta, setBetaError);
     }    
 
-    var data = [];    
-    if (!alphaError && !betaError) {
-        var i;    
-        for (i = 0; i <= 100; i++) {
-            x = 0.01*i
-            data.push([x, BlogMath.BetaPDF(x, alpha, beta)])
-        }
-    }
-
-    var image3 = {
-        type: 'data2D',
-        data: data
-    }
-
-    let width = 500;
-    let height = 500;
-    let minX = 0;
-    let minY = 0;
-    let maxX = 1;
-    let maxY = 20;
-
-    aspectRatio = (maxY - minY)/(maxX - minX)*width/height;
+    let funcToPlot = (x) => BlogMath.BetaPDF(x, alpha, beta);
 
     var imagesToPlot = [
-        //image3
-        FunctionImageFactory(x => BlogMath.BetaPDF(x, alpha, beta), 0, 1, 40, aspectRatio)
+        FunctionImageFactory(funcToPlot, [0, 1], 40)
     ]
+
+    let DraggablePlot = draggable_rect_view(Plot);
 
     return (
         <div className="plot-app">
-            <Plot images={imagesToPlot} width={width} height={height} minX={minX} minY={minY} maxX={maxX} maxY={maxY}/>
+            <DraggablePlot images={imagesToPlot} width={500} height={500} />
             <ImageConfiguration alpha={alpha} beta={beta} alphaText={alphaText} betaText={betaText}
             alphaError={alphaError} betaError={betaError}
             onAlphaChange={onAlphaChange} onBetaChange={onBetaChange}/>
@@ -88,56 +50,34 @@ function PlotApp(props)
     )
 }
 
-class Plot extends React.Component
+const ViewControlType = {
+    Undefined: 0,
+    Static: 1,
+    Draggable: 2,
+}
+
+function DraggablePlot2(props)
 {
-    constructor(props) {
-        super(props);
+    viewControl = ViewControlFactory(ViewControlType.Draggable, [boundingRect, setBoundingRect], props.width, props.height);
 
-        this.isMouseDown = false;
+    return (
+        <div onMouseDown={viewControl.mouseDown} onMouseUp={viewControl.mouseUp}
+        onMouseLeave={viewControl.mouseLeave} onMouseMove={viewControl.mouseMove}>
+            <SVGDataListFactory width={props.width} height={props.height} boundingRect={viewControl.boundingRect} 
+            imageData={props.images} />
+        </div>
+    )
+}
 
-        this.state = {
-            minX: props.minX,
-            minY: props.minY,
-            maxX: props.maxX,
-            maxY: props.maxY
-        };
-      }
-
-    handleMouseDown() {
-        this.isMouseDown = true;
-    }
-
-    handleMouseUp() {
-        this.isMouseDown = false;
-    }
-
-    handleMouseMove(e) {
-        if (this.isMouseDown) {
-            var mouseCoordRatioX = (this.state.maxX - this.state.minX)/this.props.width
-            var mouseCoordRatioY = (this.state.maxY - this.state.minY)/this.props.height
-
-            var dx = -e.movementX*mouseCoordRatioX
-            var dy = e.movementY*mouseCoordRatioY
-
-            this.setState({
-                minX: this.state.minX + dx,
-                minY: this.state.minY + dy,
-                maxX: this.state.maxX + dx,
-                maxY: this.state.maxY + dy
-            })
-        }
-    }
-
-    render() {
-        return (
-            <div onMouseDown={this.handleMouseDown.bind(this)} onMouseUp={this.handleMouseUp.bind(this)}
-            onMouseLeave={this.handleMouseUp.bind(this)} 
-            onMouseMove={this.handleMouseMove.bind(this)}>
-            <SVGDataListFactory width={this.props.width} height={this.props.height}
-            minX={this.state.minX} minY={this.state.minY} maxX={this.state.maxX} maxY={this.state.maxY} imageData={this.props.images} />
-            </div>
-        )
-    }
+function Plot(props)
+{
+    return (
+        <div onMouseDown={props.handleMouseDown} onMouseUp={props.handleMouseUp}
+        onMouseLeave={props.handleMouseLeave} onMouseMove={props.handleMouseMove}>
+            <SVGDataListFactory width={props.width} height={props.height}
+            boundingRect={props.boundingRect} imageData={props.images} />
+        </div>
+    )
 }
 
 function SVGDataListFactory(props)
@@ -147,10 +87,15 @@ function SVGDataListFactory(props)
         const y = xyPos[1]
 
         var xTrans;
-        var yTrans;        
+        var yTrans;    
+        
+        let minX = props.boundingRect.minX;
+        let minY = props.boundingRect.minY;
+        let maxX = props.boundingRect.maxX;
+        let maxY = props.boundingRect.maxY;
 
         if (Number.isFinite(x)) {
-            xTrans = (x - props.minX)/(props.maxX - props.minX) * props.width
+            xTrans = (x - minX)/(maxX - minX) * props.width
         }
         else {
             if (x == Infinity) {
@@ -158,11 +103,13 @@ function SVGDataListFactory(props)
             }
             else if (x == -Infinity) {
                 xTrans = 0;
+            } else {
+                throw "Unhandled non-finite value " + x.toString();
             }
         }
 
         if (Number.isFinite(y)) {
-            yTrans = (props.maxY - y)/(props.maxY - props.minY) * props.height;
+            yTrans = (maxY - y)/(maxY - minY) * props.height;
         }
         else {
             if (y == Infinity) {
@@ -170,6 +117,8 @@ function SVGDataListFactory(props)
             }
             else if (y == -Infinity) {
                 yTrans = props.height;
+            } else {
+                throw "Unhandled non-finite value " + x.toString();
             }
         }
 
@@ -185,7 +134,6 @@ function SVGDataListFactory(props)
 
     return React.createElement('svg', svgProps, svgChildren)
 }
-
 
 function getEntityStyleSpec(imageData) {
     var dataEntityStyleSpec = {
@@ -207,7 +155,6 @@ function getEntityStyleSpec(imageData) {
             return lineEntityStyleSpec;
     }
 }
-
 
 function SVGDataFactory(imageData, getEntityStyleSpec, viewTrans)
 {
@@ -291,12 +238,12 @@ function ImageConfiguration(props)
         return props.onBetaChange(e.target.value)
     }    
 
-    alphaTextClassName = "parameter-input"
+    var alphaTextClassName = "parameter-input"
     if (props.alphaError) {
         alphaTextClassName += " parameter-input-error"
     }
 
-    betaTextClassName = "parameter-input"
+    var betaTextClassName = "parameter-input"
     if (props.betaError) {
         betaTextClassName += " parameter-input-error"
     }    
