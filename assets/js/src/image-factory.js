@@ -2,7 +2,7 @@
     A more robust approach would be a CurveImageFactory that produces smooth points to plot
     a plane curve. Functions would be covered by the case where the plane curve is (x, f(x)).
 */
-function FunctionImageFactory(funcToPlot, start, end, minNumSegments, aspectRatio) {
+function FunctionImageFactory(funcToPlot, xInterval, minNumSegments, aspectRatio=10) {
     var i;
 
     var xArray = [];
@@ -11,7 +11,10 @@ function FunctionImageFactory(funcToPlot, start, end, minNumSegments, aspectRati
 
     var x;
 
-    var maxDx = (end - start)/minNumSegments;
+    let start = xInterval[0];
+    let end = xInterval[1];
+
+    let maxDx = (end - start)/minNumSegments;
 
     for (i = 0; i <= minNumSegments; i++) {
 
@@ -61,7 +64,9 @@ function FunctionImageFactory(funcToPlot, start, end, minNumSegments, aspectRati
 
         for (j = 1; j <= numExtraPoints; j++) {
             extraX = (x - (maxDx + dx)/2.0 + j * dx);
-            extraXArray.push(extraX);
+            if ((start < extraX) && (extraX < end)) {
+                extraXArray.push(extraX);
+            }
         }
     }
 
