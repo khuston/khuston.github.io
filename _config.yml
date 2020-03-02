@@ -24,7 +24,7 @@ author: Kyle Huston
 description: >- # this means to ignore newlines until "baseurl:"
 #  I may post thoughts and notes here.
 baseurl: "" # the subpath of your site, e.g. /blog
-url: "khuston.github.io" # the base hostname & protocol for your site, e.g. http://example.com
+url: "https://khuston.github.io" # the base hostname & protocol for your site, e.g. http://example.com
 github_username:  khuston
 linkedin_username: kyle-huston
 
