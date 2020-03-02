@@ -1,3 +1,5 @@
+import { flatten } from "./ArrayUtils.js";
+
 export function Plot(props) {
     return React.createElement(
         "div",
@@ -48,9 +50,9 @@ function SVGDataListFactory(props) {
         return [xTrans, yTrans];
     };
 
-    var svgChildren = props.imageData.map(function (imageData) {
+    var svgChildren = flatten(props.imageData.map(function (imageData) {
         return SVGDataFactory(imageData, getEntityStyleSpec, viewTrans);
-    }).flat();
+    }));
 
     var svgProps = {
         width: props.width,

@@ -1,3 +1,5 @@
+import {flatten} from "./ArrayUtils.js"
+
 export function Plot(props) {
     return (
         <div onMouseDown={props.handleMouseDown} onMouseUp={props.handleMouseUp}
@@ -52,7 +54,7 @@ function SVGDataListFactory(props) {
         return [xTrans, yTrans]
     }
 
-    const svgChildren = props.imageData.map((imageData) => SVGDataFactory(imageData, getEntityStyleSpec, viewTrans)).flat();
+    const svgChildren = flatten(props.imageData.map((imageData) => SVGDataFactory(imageData, getEntityStyleSpec, viewTrans)));
 
     var svgProps = {
         width: props.width,
