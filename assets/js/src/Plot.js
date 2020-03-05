@@ -11,50 +11,18 @@ export function Plot(props) {
 }
 
 function SVGDataListFactory(props) {
-    var viewTrans = function (xyPos) {
-        const x = xyPos[0]
-        const y = xyPos[1]
+    const svgChildren = []
 
-        var xTrans;
-        var yTrans;
+    let viewTrans = ViewTransformFactory(props.boundingRect, props.width, props.height);
 
-        let minX = props.boundingRect.minX;
-        let minY = props.boundingRect.minY;
-        let maxX = props.boundingRect.maxX;
-        let maxY = props.boundingRect.maxY;
-
-        if (Number.isFinite(x)) {
-            xTrans = (x - minX) / (maxX - minX) * props.width
+    for (var i = 0; i < props.imageData.length; i ++) {
+        let imageData = props.imageData[i];
+        try {
+            svgChildren.push(SVGDataFactory(imageData, getEntityStyleSpec, viewTrans));
+        } catch (error) {
+            console.log(error.message);
         }
-        else {
-            if (x == Infinity) {
-                xTrans = props.width;
-            }
-            else if (x == -Infinity) {
-                xTrans = 0;
-            } else {
-                throw "Unhandled non-finite value " + x.toString();
-            }
-        }
-
-        if (Number.isFinite(y)) {
-            yTrans = (maxY - y) / (maxY - minY) * props.height;
-        }
-        else {
-            if (y == Infinity) {
-                yTrans = 0;
-            }
-            else if (y == -Infinity) {
-                yTrans = props.height;
-            } else {
-                throw "Unhandled non-finite value " + y.toString();
-            }
-        }
-
-        return [xTrans, yTrans]
     }
-
-    const svgChildren = flatten(props.imageData.map((imageData) => SVGDataFactory(imageData, getEntityStyleSpec, viewTrans)));
 
     var svgProps = {
         width: props.width,
@@ -151,4 +119,46 @@ function SVGElementFactory(entitySpec) {
     delete entityProps.type;
 
     return React.createElement(entitySpec.type, entityProps, [])
+}
+
+
+function ViewTransformFactory(boundingRect, width, height) { 
+    return function viewTrans(xyPos) {
+        var x = xyPos[0];
+        var y = xyPos[1];
+
+        var xTrans;
+        var yTrans;
+
+        var minX = boundingRect.minX;
+        var minY = boundingRect.minY;
+        var maxX = boundingRect.maxX;
+        var maxY = boundingRect.maxY;
+
+        if (Number.isFinite(x)) {
+            xTrans = (x - minX) / (maxX - minX) * width;
+        } else {
+            if (x == Infinity) {
+                xTrans = width;
+            } else if (x == -Infinity) {
+                xTrans = 0;
+            } else {
+                throw "Unhandled non-finite value " + x.toString();
+            }
+        }
+
+        if (Number.isFinite(y)) {
+            yTrans = (maxY - y) / (maxY - minY) * height;
+        } else {
+            if (y == Infinity) {
+                yTrans = 0;
+            } else if (y == -Infinity) {
+                yTrans = height;
+            } else {
+                throw "Unhandled non-finite value " + y.toString();
+            }
+        }
+
+        return [xTrans, yTrans];
+    };
 }

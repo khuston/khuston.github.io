@@ -29,7 +29,7 @@ export function TextAndSliderParameter(props) {
         ":\xA0",
         React.createElement("input", { type: "text", className: getParamTextboxClassName(paramViewModel.paramError),
             value: paramViewModel.paramText, onChange: handleParamChange }),
-        React.createElement("input", { type: "range", min: "1", max: "100", value: paramViewModel.param, onChange: handleParamChange })
+        React.createElement("input", { type: "range", min: "1", max: "300", value: paramViewModel.param, onChange: handleParamChange })
     );
 }
 

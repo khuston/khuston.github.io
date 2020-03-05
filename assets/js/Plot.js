@@ -2,7 +2,7 @@ import { flatten } from "./ArrayUtils.js";
 
 export function Plot(props) {
     return React.createElement(
-        "div",
+        'div',
         { onMouseDown: props.handleMouseDown, onMouseUp: props.handleMouseUp,
             onMouseLeave: props.handleMouseLeave, onMouseMove: props.handleMouseMove },
         React.createElement(SVGDataListFactory, { width: props.width, height: props.height,
@@ -11,48 +11,18 @@ export function Plot(props) {
 }
 
 function SVGDataListFactory(props) {
-    var viewTrans = function viewTrans(xyPos) {
-        var x = xyPos[0];
-        var y = xyPos[1];
+    var svgChildren = [];
 
-        var xTrans;
-        var yTrans;
+    var viewTrans = ViewTransformFactory(props.boundingRect, props.width, props.height);
 
-        var minX = props.boundingRect.minX;
-        var minY = props.boundingRect.minY;
-        var maxX = props.boundingRect.maxX;
-        var maxY = props.boundingRect.maxY;
-
-        if (Number.isFinite(x)) {
-            xTrans = (x - minX) / (maxX - minX) * props.width;
-        } else {
-            if (x == Infinity) {
-                xTrans = props.width;
-            } else if (x == -Infinity) {
-                xTrans = 0;
-            } else {
-                throw "Unhandled non-finite value " + x.toString();
-            }
+    for (var i = 0; i < props.imageData.length; i++) {
+        var imageData = props.imageData[i];
+        try {
+            svgChildren.push(SVGDataFactory(imageData, getEntityStyleSpec, viewTrans));
+        } catch (error) {
+            console.log(error.message);
         }
-
-        if (Number.isFinite(y)) {
-            yTrans = (maxY - y) / (maxY - minY) * props.height;
-        } else {
-            if (y == Infinity) {
-                yTrans = 0;
-            } else if (y == -Infinity) {
-                yTrans = props.height;
-            } else {
-                throw "Unhandled non-finite value " + y.toString();
-            }
-        }
-
-        return [xTrans, yTrans];
-    };
-
-    var svgChildren = flatten(props.imageData.map(function (imageData) {
-        return SVGDataFactory(imageData, getEntityStyleSpec, viewTrans);
-    }));
+    }
 
     var svgProps = {
         width: props.width,
@@ -153,4 +123,45 @@ function SVGElementFactory(entitySpec) {
     delete entityProps.type;
 
     return React.createElement(entitySpec.type, entityProps, []);
+}
+
+function ViewTransformFactory(boundingRect, width, height) {
+    return function viewTrans(xyPos) {
+        var x = xyPos[0];
+        var y = xyPos[1];
+
+        var xTrans;
+        var yTrans;
+
+        var minX = boundingRect.minX;
+        var minY = boundingRect.minY;
+        var maxX = boundingRect.maxX;
+        var maxY = boundingRect.maxY;
+
+        if (Number.isFinite(x)) {
+            xTrans = (x - minX) / (maxX - minX) * width;
+        } else {
+            if (x == Infinity) {
+                xTrans = width;
+            } else if (x == -Infinity) {
+                xTrans = 0;
+            } else {
+                throw "Unhandled non-finite value " + x.toString();
+            }
+        }
+
+        if (Number.isFinite(y)) {
+            yTrans = (maxY - y) / (maxY - minY) * height;
+        } else {
+            if (y == Infinity) {
+                yTrans = 0;
+            } else if (y == -Infinity) {
+                yTrans = height;
+            } else {
+                throw "Unhandled non-finite value " + y.toString();
+            }
+        }
+
+        return [xTrans, yTrans];
+    };
 }

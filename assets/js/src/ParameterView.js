@@ -29,7 +29,7 @@ export function TextAndSliderParameter(props) {
             {paramViewModel.paramName}:&nbsp;
             <input type="text" className={getParamTextboxClassName(paramViewModel.paramError)}
                 value={paramViewModel.paramText} onChange={handleParamChange}></input>
-            <input type="range" min="1" max="100" value={paramViewModel.param} onChange={handleParamChange}></input>
+            <input type="range" min="1" max="300" value={paramViewModel.param} onChange={handleParamChange}></input>
         </label>)
 }
 
