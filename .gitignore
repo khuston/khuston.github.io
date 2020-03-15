@@ -5,3 +5,5 @@ _site
 vendor
 *.code-workspace
 .vscode
+assets/js/build
+assets/js/node_modules
