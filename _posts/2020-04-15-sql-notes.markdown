@@ -1,0 +1,32 @@
+---
+layout: post
+title:  "Jumping into SQL with Python"
+date:   2020-04-20 12:30:00 -0500
+categories: [web, programming]
+published: false
+---
+## 
+For relational database/SQL novices who know Python, I highly recommend 
+
+- [Introduction to SQL (Computer Science)](https://www.youtube.com/playlist?list=PLi01XoE8jYojRqM4qGBF1U90Ee1Ecb5tt)
+
+- 
+
+Although they are a bit cheesy, I highly recommend these videos to beginners.
+
+Although I've had occasional need to write SQL queries, I haven't taken the time until now to learn how integrate a database into an application. The only takeaway from my professional exposure to databases I could name is a restatement of the Dependency Inversion principle to databases: the parts of our code that need to interact with a database should depend on an abstract interface so that the underlying database can be swapped out without making changes to the rest of the code.
+
+She breaks down databases in a number of ways:
+1. Free vs. Commercial
+2. Local vs. Cloud
+3. Client Scalability
+
+The suggestion for folks like me, with no budget, but who want the ability to scale without too much pain in the future is to use one of MySQL, PostgreSQL, or MariaDB.
+
+## 
+
+The choice of DBMS certainly matters for manual interaction. However, for software interaction with the database, it  to code against an abstraction layer which smooths out the differences between various DBMS choices. This is one of the main functions 
+
+
+
+1. 

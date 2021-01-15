@@ -1,0 +1,14 @@
+---
+layout: post
+title:  "Property Value Per Acre in Gainesville"
+date:   2020-10-28 18:31:00 -0500
+categories: [government, communication]
+published: false
+---
+
+Property value per acre (PVPA) is a metric for comparing efficiency of land use.
+
+The theory underlying its use is that property value is good, and concentrated property value is better. More specifically, where public services are funded by property taxes, it is better to have higher property values so that tax revenues are higher or tax rates can be lower. Property value per acre makes even more sense if we assume infrastructure costs are approximately fixed per Cunit area of developed land. In other words, given two parcels of land of equal area, if we assume the public costs associated with this land are the same, then the parcel that is better for public finances is the one which generates more public revenue.
+
+PVPA is computed simply by dividing the value of a property by its acreage. The map below shows Gainesville properties colored by PVPA. 
+
