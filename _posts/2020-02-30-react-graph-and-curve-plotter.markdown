@@ -3,6 +3,7 @@ layout: post
 title:  "React app for plotting graphs and curves" 
 date:   2020-02-30 12:30:00 -0500
 categories: [web, programming]
+published: false
 mathjax: true
 ---
 I often make simple plots with [FooPlot](fooplot) because it is quick and easy to use. [FooPlot][fooplot] at the time of writing can plot several types of images on a 2D Cartesian plane with coordinates $$x$$ and $$y$$:

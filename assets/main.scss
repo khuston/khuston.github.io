@@ -24,3 +24,28 @@
     background-size: auto 100%;
     background-position: right;
 }
+
+aside:not(.aside-center) {
+    width: 40%;
+    padding-left: .5rem;
+    margin-left: .5rem;
+    float: right;
+    box-shadow: inset 5px 0 5px -5px #333333;
+    font-style: italic;
+    color: #333333;
+    background-color: lightyellow;
+}
+
+aside.aside-center {
+    padding-left: .5rem;
+    margin-left: 1.5rem;
+    margin-right: 1.5rem;
+    box-shadow: inset 5px 0 5px -5px #333333;
+    font-style: italic;
+    color: #333333;
+    background-color: lightyellow;
+}
+
+aside > p {
+    margin: .5rem;
+}
