@@ -3,7 +3,7 @@ layout: post
 title:  "Destructive pass/fail testing of batches"
 date:   2020-05-01 12:30:00 -0500
 categories: [statistics]
-published: true
+published: false
 mathjax: true
 ---
 
