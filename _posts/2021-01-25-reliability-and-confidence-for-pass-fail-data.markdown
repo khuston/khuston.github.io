@@ -1,7 +1,7 @@
 ---
 layout: post
 title:  "Reliability and confidence from pass/fail data"
-date:   2020-04-01 12:30:00 -0500
+date:   2021-01-25 3:01:00 -0500
 categories: statistics
 mathjax: true
 ---

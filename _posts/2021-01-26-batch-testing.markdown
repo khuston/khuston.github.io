@@ -1,13 +1,22 @@
 ---
 layout: post
 title:  "Destructive pass/fail testing of batches"
-date:   2020-05-01 12:30:00 -0500
+date:   2021-01-26 03:56:00 -0500
 categories: [statistics]
-published: false
 mathjax: true
 ---
 
-If you produce a bad batch, and the batch isn't well-mixed, you might have to take multiple samples from the batch to find one that fails a test. This might happen if a batch of material is contaminated, but the contaminant is not uniformly distributed within the batch. Although it would be preferable to produce no bad batches, it to filter out bad batches with some level of reliability and confidence using process data, if you assume that the process (including contamination) is consistent.
+<aside class="aside-center"><p>An important caveat: This post is intended as a thought exercise rather than a professional recommendation. At a later date I might return to the topic of when the methods here could be applied in the real world.</p>
+
+<p>In particular, for this post, I assume that an unknown source of contamination is consistent enough to be modeled as a sequence of independent and identically distributed events. This would imply that the probabilistic contamination model can be calibrated at one time and make meaningful predictions at future times. In reality, this assumption can easily be violated. For example, if a piece of equipment breaks and introduces a new source of contamination.</p>
+
+<p>For good process control, an unknown contamination source should be identified and monitored if not controlled or eliminated. Otherwise, the assumption of a consistent contamination rate can easily be wrong. Nonetheless, for this thought exercise, I'll go ahead with the assumption. I can return later to investigate how the risky assumption might be checked, perhaps by periodic recalibration.</p></aside>
+
+If you produce a bad batch, and the batch isn't well-mixed, you might have to take multiple samples from the batch to find one that fails a test. This might happen if a batch of material is contaminated, but the contaminant is not uniformly distributed within the batch. Although it would be preferable to produce no bad batches, it is possiblee to filter out bad batches with some level of reliability and confidence using process data. The simplest way would be to calculate reliability and confidence for each batch from scratch [as shown in a previous post]({% link _posts/2021-01-25-reliability-and-confidence-for-pass-fail-data.markdown %}).
+
+However, this can require many samples. Wouldn't it be nice if we could use our observations of the contamination events to inform the sampling plan? For example, if a contamination process always results in highly detectable, homogeneous contamination, then we need fewer samples to detect a bad batch.
+
+If you assume that the process (including contamination) is consistent over time, then you could measure the contamination at one time, and use a calibrated model to inform your batch testing protocol.
 
 Consider a process that produces batches which are either good or bad.
 
@@ -16,7 +25,7 @@ Consider a process that produces batches which are either good or bad.
 
 The batches aren't well mixed, so a bad batch can have some good samples and some bad samples. It may be necessary to take multiple samples from a batch to determine whether it is good or bad.
 
-How many good samples are needed before a batch has a certain probability of being good? Before we answer this question, I define the process more formally in the next section.
+How many good samples are needed before a batch has a certain probability of being good, conditional on our contamination model? Before we answer this question, I define the process more formally.
 
 <aside class="aside-center"><p>One can imagine several possible performance targets for testing and filtering of batches:</p>
 
@@ -70,27 +79,4 @@ $$
 \end{aligned}
 $$
 
-To determine $$n$$, we need to learn something about $$y_b$$ and $$y_s$$.
-
-## Inference of $$y_b, y_s$$ from data
-The product of likelihood and prior probability is given by the joint probability of the observations and parameters.
-
-$$p(\boldsymbol{k}, y_b, y_s; \boldsymbol{n})$$
-
-We can develop this into a prior probability multiplied by the likelihood of observing $$k_i$$ given $$n_i$$, $$y_b$$ and $$y_s$$. 
-
-$$p(y_b, y_s) \prod_{i=1}^{N} \left( \binom{n_i}{k_i} y_s^{k_i} (1 - y_s)^{n_i - k_i} y_b + \delta_{k_i, 0} (1 - y_b) \right)$$
-
-The $$\delta_{k,0}$$ in the above is a Kronecker delta, so that the last term is nonzero only if $$k_i = 0$$.
-
-We can slightly simplify the appearance by separating factors where $$k_i = 0$$ from those where $$k_1 > 0$$ as follows. We reorder the indices so that $$1 \leq i \leq N_0$$ when $$k_i = 0$$ and $$N_0 < i \leq N$$ when $$k_i > 0$$.
-
-$$p(y_b, y_s) y_b^{N - N_0} \left( \prod_{i=1}^{N_0} f(y_b, y_s) \right) \left( \prod_{i=N_0+1}^{N} h(y_s) \right)$$
-
-$$f(y_b, y_s) := \left((1 - y_s)^{n_i} - 1\right)y_b + 1$$
-
-$$h(y_s) := \binom{n_i}{k_i} y_s^{k_i} (1 - y_s)^{n_i - k_i}$$
-
-We also named two functions $$f$$ and $$h$$.
-
-Given a data set $$\{  \}$$
+To determine $$n$$, we need to learn something about $$y_b$$ and $$y_s$$. For that, we need statistical inference from contamination data, and I will show how this can be done in a future post.
