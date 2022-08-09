@@ -1,5 +1,7 @@
+
+## Start writing
+
 ```bash
-bundle update
-bundle exec jekyll build
-bundle exec jekyll serve
+bundle install
+bundle exec jekyll serve --future --livereload
 ```
