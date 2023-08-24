@@ -4,6 +4,7 @@ title:  "Gardenplace, a work in progress"
 date:   2021-01-20 9:00:00 -0500
 categories: [web, programming]
 mathjax: true
+published: false
 ---
 
 Gardenplace is my ongoing web development project, hosted on AWS free tier.
